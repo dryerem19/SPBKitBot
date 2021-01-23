@@ -1,5 +1,10 @@
 {
     "urls": {
+        "url_knowlege":
+        {
+            "type": "Сайт колледжа",
+            "url": "http://www.spbkit.edu.ru/"
+        },
         "url_phomin":
         {
             "type": "Фомин Александр Валерьевич",
@@ -15,15 +20,15 @@
             "type": "Матысик Ирина Алексеевна",
             "url": "https://sites.google.com/site/iamatisik/"
         },
-        "url_moodle":
+        "url_moodle_old":
         {
-            "type": "Moodle",
+            "type": "Старый Moodle",
             "url": "http://spbkit.ddns.net/v35/"
         },
-        "url_knowlege":
+        "url_moodle_new":
         {
-            "type": "Сайт колледжа",
-            "url": "http://www.spbkit.edu.ru/"
+            "type": "Новый Moodle",
+            "url": "https://do2.rcokoit.ru/?redirect=0"
         }
     }
 }
