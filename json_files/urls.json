@@ -1,0 +1,29 @@
+{
+    "urls": {
+        "url_phomin":
+        {
+            "type": "Фомин Александр Валерьевич",
+            "url": "http://learn.fxnode.ru:8080/lect/"
+        },
+        "url_tat_mts":
+        {
+            "type": "Михайлова Татьяна Сергеевна",
+            "url": "https://sites.google.com/site/tatmikhail/"
+        },
+        "url_mat":
+        {
+            "type": "Матысик Ирина Алексеевна",
+            "url": "https://sites.google.com/site/iamatisik/"
+        },
+        "url_moodle":
+        {
+            "type": "Moodle",
+            "url": "http://spbkit.ddns.net/v35/"
+        },
+        "url_knowlege":
+        {
+            "type": "Сайт колледжа",
+            "url": "http://www.spbkit.edu.ru/"
+        }
+    }
+}
