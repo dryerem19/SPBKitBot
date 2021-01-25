@@ -6,6 +6,7 @@
 """
 
 import configparser
+import requests
 import json
 import os
 import time
@@ -64,14 +65,17 @@ class SPBKitHelper(object):
                     text = "Привет! Я помогу узнать домашнее задание и рапсисание занятий, напомню тебе почту преподавателя и дам ссылку на его сайт. В общем, со мной тебе будет легче и удобней учиться, надеюсь мы сработаемся :)"
                     self.send_message(text, Keyboard.main_page())
 
-                if btn_type == "less_one": # Ученик пропустил одну пару
-                    self.send_message(Func.add_record_in_table(btn_enter, self.path, 1), Keyboard.main_page())
+                try:
+                    if btn_type == "less_one": # Ученик пропустил одну пару
+                        self.send_message(Func.add_record_in_table(btn_enter, self.path, 1), Keyboard.main_page())
 
-                elif btn_type == "less_two": # две пары
-                    self.send_message(Func.add_record_in_table(btn_enter, self.path, 2), Keyboard.main_page())
+                    elif btn_type == "less_two": # две пары
+                        self.send_message(Func.add_record_in_table(btn_enter, self.path, 2), Keyboard.main_page())
 
-                elif btn_type == "less_three": # три пары
-                    self.send_message(Func.add_record_in_table(btn_enter, self.path, 3), Keyboard.main_page())
+                    elif btn_type == "less_three": # три пары
+                        self.send_message(Func.add_record_in_table(btn_enter, self.path, 3), Keyboard.main_page())
+                except UnboundLocalError:
+                    pass
                     
                 from_id = str(self.event.obj.message["from_id"])
                 try:
@@ -348,11 +352,12 @@ def main():
     bot = SPBKitHelper(token, ids, api, current_path, admin_id)
     bot.start()
 
-    try:
-        bot.listen()
-    except requests.exceptions.ReadTimeout:
-        print("Переподключение к серверам ВК\n")
-        time.sleep(3)
+    while True:
+        try:
+            bot.listen()
+        except requests.exceptions.ReadTimeout:
+            print("Reconectintg to VK server's\n")
+            time.sleep(3)
 
 if __name__ == "__main__":
     main()
