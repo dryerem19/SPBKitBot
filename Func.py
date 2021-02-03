@@ -363,12 +363,6 @@ class Func(object):
         pass
 
     @staticmethod
-    def day() -> str:
-        """Возвращает сегодняшнее число."""
-
-        return str(datetime.datetime.now())
-
-    @staticmethod
     def weekday() -> int:
         """Возвращает день недели.
         0 - Понедельник
@@ -376,3 +370,8 @@ class Func(object):
         """
 
         return datetime.datetime.today().weekday()
+
+def day() -> str:
+    """Возвращает сегодняшнее число."""
+
+    return str(datetime.datetime.now().day)
