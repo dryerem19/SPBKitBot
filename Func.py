@@ -229,106 +229,15 @@ class Func(object):
 
         para *= 2
 
-        now = datetime.datetime.now()
-
         gc = pygsheets.authorize(service_file=os.path.join(path, KitFile.SERVICE))
         sheets = gc.open_by_url("https://docs.google.com/spreadsheets/d/1LxPQZ8VwG3Acu-TG8Tclr4POjnXcXlhVa2jsa3LP_Go/edit?usp=sharing")
 
-        worksheet = sheets.worksheet(property='index', value=4)
+        worksheet = sheets.worksheet(property='index', value=5)
 
-        h = ""
-        if now.day == 1:
-            h = "C"
-
-        elif now.day == 2:
-            h = "D"
-
-        elif now.day == 3:
-            h = "E"
-
-        elif now.day == 4:
-            h = "F"
-
-        elif now.day == 5:
-            h = "G"
-
-        elif now.day == 6:
-            h = "H"
-
-        elif now.day == 7:
-            h = "I"
-
-        elif now.day == 8:
-            h = "J"
-
-        elif now.day == 9:
-            h = "K"
-
-        elif now.day == 10:
-            h = "L"
-
-        elif now.day == 11:
-            h = "M"
-
-        elif now.day == 12:
-            h = "N"
-
-        elif now.day == 13:
-            h = "O"
-
-        elif now.day == 14:
-            h = "P"
-
-        elif now.day == 15:
-            h = "Q"
-
-        elif now.day == 16:
-            h = "R"
-
-        elif now.day == 17:
-            h = "S"
-
-        elif now.day == 18:
-            h = "T"
-
-        elif now.day == 19:
-            h = "U"
-
-        elif now.day == 20:
-            h = "V"
-
-        elif now.day == 21:
-            h = "W"
-
-        elif now.day == 22:
-            h = "X"
-
-        elif now.day == 23:
-            h = "Y"
-
-        elif now.day == 24:
-            h = "Z"
-
-        elif now.day == 25:
-            h = "AA"
-
-        elif now.day == 26:
-            h = "AB"
-
-        elif now.day == 27:
-            h = "AC"
-
-        elif now.day == 28:
-            h = "AD"
-
-        elif now.day == 29:
-            h = "AE"
-
-        elif now.day == 30:
-            h = "AF"
-        
-        elif now.day == 31:
-            h = "AH"
+        with open("admin/config.json", "r", encoding="utf8") as config:
+            config = json.load(config) # Загружаем адреса ячеек таблицы
+            
+            h = config[day()]
 
         if lastname == "avetysyan":
             cell = Lastname.AVETYSYAN.replace(Lastname.AVETYSYAN[0], h)
@@ -443,3 +352,27 @@ class Func(object):
             worksheet.update_value(cell, para)
 
         return "Запись успешно добавлена в таблицу"
+
+    @staticmethod
+    def get_shedule_canteen(day: str) -> str:
+        """Возвращает расписание посещения столовой.
+        
+        :param day: День, на который следует вернуть расписание.
+        :type lastname: str
+        """
+        pass
+
+    @staticmethod
+    def day() -> str:
+        """Возвращает сегодняшнее число."""
+
+        return str(datetime.datetime.now())
+
+    @staticmethod
+    def weekday() -> int:
+        """Возвращает день недели.
+        0 - Понедельник
+        6 - Воскресенье
+        """
+
+        return datetime.datetime.today().weekday()

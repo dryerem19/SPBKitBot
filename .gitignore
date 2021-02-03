@@ -1,3 +1,6 @@
 auth.ini 
 admin.json
 spbkit-bot-key.json
+.vs 
+.vscode
+__pycache__

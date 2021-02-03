@@ -7,6 +7,7 @@
 
 import configparser
 import requests
+import threading
 import json
 import os
 import time
@@ -322,7 +323,7 @@ class SPBKitHelper(object):
             random_id=get_random_id(),
             peer_id=self.event.obj.peer_id,
             keyboard=keyboard,
-            message=message)                 
+            message=message)              
 
 
 def main():
