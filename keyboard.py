@@ -160,7 +160,6 @@ class Keyboard(object):
         keyboard.add_line()
     
         keyboard.add_callback_button("Шубарина", VkKeyboardColor.SECONDARY, {"type": "shubarina"})
-        keyboard.add_callback_button("Юнусов", VkKeyboardColor.SECONDARY, {"type": "unusov"})
 
         return keyboard.get_keyboard()
 
@@ -243,6 +242,8 @@ class Keyboard(object):
         keyboard.add_button("Две пары", VkKeyboardColor.SECONDARY, {"type": "less_two"})
         keyboard.add_line()
         keyboard.add_button("Три пары", VkKeyboardColor.SECONDARY, {"type": "less_three"})
+        keyboard.add_line()
+        keyboard.add_button("Четыре пары", VkKeyboardColor.SECONDARY, {"type": "less_four"})
         keyboard.add_line()
         keyboard.add_button("Главная", VkKeyboardColor.PRIMARY, {"type": "btn_back"})
 

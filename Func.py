@@ -41,65 +41,24 @@ class Lastname:
     KORNINSKY = "C16"
     MAKAROV = "C17"
     MAMATOV = "C18"
-    MOGUCHEVA = "C20"
-    OORZAK = "C21"
-    OTMAHOVA = "C22"
-    PLIEV = "C23"
-    REUTA = "C24"
-    SEMKIV = "C25"
-    SILKINA = "C26"
-    SMELCHAKOVA = "C27"
-    SOLOVIEV = "C28"
-    TEBENKOV = "C29"
-    HAMIDULIN = "C30"
-    HOVRAT = "C31"
-    CHERNYAKOV = "C32"
-    CHIKINEV = "C33"
-    SHUBARINA = "C34"
-    UNUSOV = "C35"
+    MOGUCHEVA = "C19"
+    OORZAK = "C20"
+    OTMAHOVA = "C21"
+    PLIEV = "C22"
+    REUTA = "C23"
+    SEMKIV = "C24"
+    SILKINA = "C25"
+    SMELCHAKOVA = "C26"
+    SOLOVIEV = "C27"
+    TEBENKOV = "C28"
+    HAMIDULIN = "C29"
+    HOVRAT = "C30"
+    CHERNYAKOV = "C31"
+    CHIKINEV = "C32"
+    SHUBARINA = "C33"
 
 class Func(object):
     """Этот класс содержит в себе методы приложения"""
-
-    @staticmethod
-    def get_shedule(day: str, path: str, file=KitFile.SHEDULE) -> str:
-        """Получает раписание.
-        
-        :param day: День, на который нужно получить расписание.
-        :type day: str
-        """
-
-        with open(os.path.join(path, file), "r", encoding='utf-8') as shedule:
-            data = json.load(shedule)
-
-            string = "📚 Расписание на "
-            if day == "monday":
-                string += "понедельник\n"
-                
-            elif day == "tuesday":
-                string += "вторник\n"
-
-            elif day == "wednesday":
-                string += "среду\n"
-
-            elif day == "thursday":
-                string += "четверг\n"
-
-            elif day == "friday":
-                string += "пятницу\n"
-
-            elif day == "saturday":
-                string += "субботу\n"
-
-            for i in data[day]:
-                try:
-                    string += "\n" + data[day][i]["title"] + " (%s)"%data[day][i]["cab"] + "\n" \
-                        + "👨‍🏫 " + data[day][i]["prepod"] + "\n" + '    - ' + data[day][i]["time_1"] + '\n' \
-                            + "    - " + data[day][i]["time_2"] + '\n'
-                except KeyError:
-                    pass
-        
-        return string        
 
     @staticmethod
     def get_email(path: str, file=KitFile.EMAIL) -> str:
@@ -232,10 +191,10 @@ class Func(object):
         gc = pygsheets.authorize(service_file=os.path.join(path, KitFile.SERVICE))
         sheets = gc.open_by_url("https://docs.google.com/spreadsheets/d/1LxPQZ8VwG3Acu-TG8Tclr4POjnXcXlhVa2jsa3LP_Go/edit?usp=sharing")
 
-        worksheet = sheets.worksheet(property='index', value=5)
+        worksheet = sheets.worksheet(property='index', value=6)
 
         with open("admin/config.json", "r", encoding="utf8") as config:
-            config = json.load(config) # Загружаем адреса ячеек таблицы
+            config = json.load(config) # load cell position
             
             h = config[day()]
 
@@ -372,6 +331,9 @@ class Func(object):
         return datetime.datetime.today().weekday()
 
 def day() -> str:
-    """Возвращает сегодняшнее число."""
+    """Возвращает сегодняшнее число.
+
+    :return type: str
+    """
 
     return str(datetime.datetime.now().day)

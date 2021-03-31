@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "g:/Мой диск/Programming/Python/Projects/SPBKitBot/main.py", line 408, in main
+    bot.listen()
+  File "g:/Мой диск/Programming/Python/Projects/SPBKitBot/main.py", line 123, in listen
+    self.send_message(shedule.get_shedule(0), Keyboard.shedule_page())
+  File "g:\Мой диск\Programming\Python\Projects\SPBKitBot\scripts\shedule.py", line 52, in get_shedule
+    s += f' - {t}\n\n'
+NameError: name 't' is not defined

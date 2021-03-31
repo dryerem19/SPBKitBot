@@ -6,20 +6,30 @@
 """
 
 import configparser
+import traceback
+import logging
 import requests
 import threading
 import json
 import os
+import sys
 import time
+import smtplib
 
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email import encoders
 
 from vk_api import VkApi
 from vk_api.utils import get_random_id
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
 
+from SMTPHandler import BufferingSMTPHandler
 from keyboard import Keyboard
 from Func import KitFile, Func
+
+from scripts import shedule
 
 
 class SPBKitHelper(object):
@@ -44,12 +54,33 @@ class SPBKitHelper(object):
         self.path = current_path
         self.admin = admin_id
 
+        # Создание логгера
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+
+        # Создание обработчика
+        handler = logging.FileHandler("SPBKitBot.log")
+        handler.setLevel(logging.DEBUG)
+
+        # Создание форматора
+        formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+
+        # Добавляем форматтер в обработчик
+        handler.setFormatter(formatter)
+
+        # Добаляем обработчик в логгер
+        self.logger.addHandler(handler)
+
+        with open("admin/admin_smtp.json", "r") as smtp:
+            smtp = json.load(smtp)
+
     def start(self):
         """Запустить LongPoll сессию"""
 
         vk_session = VkApi(token = self.token, api_version = self.api)
         self.vk = vk_session.get_api()
         self.longpoll = VkBotLongPoll(vk_session, group_id = self.id)
+        self.logger.info("Session started...")
 
 
     def listen(self):
@@ -58,8 +89,10 @@ class SPBKitHelper(object):
 
         for self.event in self.longpoll.listen():
             text = "Сколько пар пропустил ученик?"
+            self.logger.info("Слушаем сервер...")
 
             if self.event.type == VkBotEventType.MESSAGE_NEW:
+                self.logger.info("MESSAGE_NEW")
                 try:
                     btn_type = json.loads(self.event.obj.message["payload"])["type"]
                 except KeyError: # Это не кнопка
@@ -75,6 +108,9 @@ class SPBKitHelper(object):
 
                     elif btn_type == "less_three": # три пары
                         self.send_message(Func.add_record_in_table(btn_enter, self.path, 3), Keyboard.main_page())
+
+                    elif btn_type == "less_four": # четыре пары
+                        self.send_message(Func.add_record_in_table(btn_enter, self.path, 4), Keyboard.main_page())
                 except UnboundLocalError:
                     pass
                     
@@ -84,22 +120,22 @@ class SPBKitHelper(object):
                         self.send_message("Вы перешли в раздел: Расписание занятий", Keyboard.shedule_page())
                     
                     elif btn_type == "btn_monday_sh":
-                        self.send_message(Func.get_shedule("monday", self.path), Keyboard.shedule_page())
+                        self.send_message(shedule.get_shedule(0), Keyboard.shedule_page())
 
                     elif btn_type == "btn_tuesday_sh":
-                        self.send_message(Func.get_shedule("tuesday", self.path), Keyboard.shedule_page())
+                        self.send_message(shedule.get_shedule(1), Keyboard.shedule_page())
 
                     elif btn_type == "btn_wednesday_sh":
-                        self.send_message(Func.get_shedule("wednesday", self.path), Keyboard.shedule_page())
+                        self.send_message(shedule.get_shedule(2), Keyboard.shedule_page())
 
                     elif btn_type == "btn_thursday_sh":
-                        self.send_message(Func.get_shedule("thursday", self.path), Keyboard.shedule_page())
+                        self.send_message(shedule.get_shedule(3), Keyboard.shedule_page())
 
                     elif btn_type == "btn_friday_sh":
-                        self.send_message(Func.get_shedule("friday", self.path), Keyboard.shedule_page())
+                        self.send_message(shedule.get_shedule(4), Keyboard.shedule_page())
 
                     elif btn_type == "btn_saturday_sh":
-                        self.send_message(Func.get_shedule("saturday", self.path), Keyboard.shedule_page())
+                        self.send_message(shedule.get_shedule(5), Keyboard.shedule_page())
                     
                     elif btn_type == "btn_back_sh":
                         self.send_message("Вы перешли в раздел: Главный", Keyboard.main_page())
@@ -171,6 +207,9 @@ class SPBKitHelper(object):
 
                     elif btn_type == "less_three":
                         self.send_message(btn_enter + " пропустил три пары", Keyboard.count_lessons())
+
+                    elif btn_type == "less_four":
+                        self.send_message(btn_enter + " пропустил четыре пары", Keyboard.count_lessons())
 
                     elif btn_type == "btn_back":
                         self.send_message("Главное меню", Keyboard.main_page())
@@ -330,35 +369,67 @@ def main():
     """
     Точка входа в приложение
     """
-    current_path = os.path.dirname(os.path.abspath(__file__))
+    try:
+        print("[*] - Bot Running...")
+        current_path = os.path.dirname(os.path.abspath(__file__))
 
-    # Читаем конфигурационный файл
-    config = configparser.ConfigParser()
-    config.read("auth.ini")
+        # send
+        recipients = ['mamayma8@gmail.com', 'kirillegorov77@gmail.com']
+        msg = MIMEMultipart()
+        me = 'mamayma8@gmail.com'
+        you = 'mamayma8@gmail.com'
+        msg['Subject'] = 'python-bot'
+        msg['From'] = me
+        msg['To'] = ", ".join(recipients)
 
-    # Аутентификационные данные
-    token = config.get("Auth", "group_token")
-    ids = config.get("Auth", "group_id")
-    api = config.get("Auth", "api_version")
+        # Читаем конфигурационный файл
+        config = configparser.ConfigParser()
+        config.read("auth.ini")
 
-    # ID Администраторов
-    admin_id = []
-    with open(os.path.join(current_path, "admin.json"), "r", encoding="utf8") as admin:
-        admin = json.load(admin)
-        
-        for i in admin["list_admin"]:
-            admin_id.append(admin["list_admin"][i]["id"])
+        # Аутентификационные данные
+        token = config.get("Auth", "group_token")
+        ids = config.get("Auth", "group_id")
+        api = config.get("Auth", "api_version")
 
-    # Запускаем бота
-    bot = SPBKitHelper(token, ids, api, current_path, admin_id)
-    bot.start()
+        # ID Администраторов
+        admin_id = []
+        with open(os.path.join(current_path, "admin.json"), "r", encoding="utf8") as admin:
+            admin = json.load(admin)
+            
+            for i in admin["list_admin"]:
+                admin_id.append(admin["list_admin"][i]["id"])
 
-    while True:
-        try:
-            bot.listen()
-        except requests.exceptions.ReadTimeout:
-            print("Reconectintg to VK server's\n")
-            time.sleep(3)
+        # Запускаем бота
+        bot = SPBKitHelper(token, ids, api, current_path, admin_id)
+        bot.start()
+
+        while True:
+            try:
+                bot.listen()
+            except requests.exceptions.ReadTimeout:
+                print("[*] - ReadTimeout Exceptions: Reconnect...\n")
+                time.sleep(3)
+    except Exception as e:
+        print(e)
+        '''
+        with open("log.log", "w") as log:
+            log.write(traceback.format_exc())
+            log.close()
+
+        with open("log.log", "rb") as f:
+            attachment = MIMEBase('application', 'octet-stream')
+            attachment.set_payload(f.read())
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', 'attachment', filename="log.log")
+            msg.attach(attachment)
+
+
+        s = smtplib.SMTP("smtp.gmail.com", 587)
+        s.starttls()
+        s.login('mamayma8@gmail.com','20021977')
+        s.sendmail(me, recipients, msg.as_string())
+        s.quit()  
+        '''     
 
 if __name__ == "__main__":
     main()
