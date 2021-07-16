@@ -410,26 +410,7 @@ def main():
                 print("[*] - ReadTimeout Exceptions: Reconnect...\n")
                 time.sleep(3)
     except Exception as e:
-        print(e)
-        '''
-        with open("log.log", "w") as log:
-            log.write(traceback.format_exc())
-            log.close()
-
-        with open("log.log", "rb") as f:
-            attachment = MIMEBase('application', 'octet-stream')
-            attachment.set_payload(f.read())
-            encoders.encode_base64(attachment)
-            attachment.add_header('Content-Disposition', 'attachment', filename="log.log")
-            msg.attach(attachment)
-
-
-        s = smtplib.SMTP("smtp.gmail.com", 587)
-        s.starttls()
-        s.login('mamayma8@gmail.com','20021977')
-        s.sendmail(me, recipients, msg.as_string())
-        s.quit()  
-        '''     
+        print(e) 
 
 if __name__ == "__main__":
     main()
