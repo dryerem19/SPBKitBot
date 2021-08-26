@@ -14,18 +14,11 @@ import json
 import os
 import sys
 import time
-import smtplib
-
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email import encoders
 
 from vk_api import VkApi
 from vk_api.utils import get_random_id
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
-
-from SMTPHandler import BufferingSMTPHandler
 from keyboard import Keyboard
 from Func import KitFile, Func
 
@@ -373,15 +366,6 @@ def main():
         print("[*] - Bot Running...")
         current_path = os.path.dirname(os.path.abspath(__file__))
 
-        # send
-        recipients = ['mamayma8@gmail.com', 'kirillegorov77@gmail.com']
-        msg = MIMEMultipart()
-        me = 'mamayma8@gmail.com'
-        you = 'mamayma8@gmail.com'
-        msg['Subject'] = 'python-bot'
-        msg['From'] = me
-        msg['To'] = ", ".join(recipients)
-
         # Читаем конфигурационный файл
         config = configparser.ConfigParser()
         config.read("auth.ini")
@@ -394,10 +378,7 @@ def main():
         # ID Администраторов
         admin_id = []
         with open(os.path.join(current_path, "admin.json"), "r", encoding="utf8") as admin:
-            admin = json.load(admin)
-            
-            for i in admin["list_admin"]:
-                admin_id.append(admin["list_admin"][i]["id"])
+            for line in admin: admin_id.append(line)
 
         # Запускаем бота
         bot = SPBKitHelper(token, ids, api, current_path, admin_id)
