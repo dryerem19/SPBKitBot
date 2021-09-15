@@ -6,31 +6,27 @@ url = "http://www.spbkit.edu.ru/index.php?option=com_timetable&Itemid=82#gruppi-
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
            'Accept': 'application/json, text/javascript, */*; q=0.01'}
 
-def get_shedule(code):
+def get_shedule(day: str):
     """get shedule.
     
     :param code: code day.
     :type day: int
     """
-    s = "📚 Расписание на "
-    if code == 0:
-        s+= "понедельник\n"
-        
-    elif code == 1:
-        s += "вторник\n"
+    s = f"📚 Расписание на {day} \n\n"
 
-    elif code == 2:
-        s += "среду\n"
-
-    elif code == 3:
-        s += "четверг\n"
-
-    elif code == 4:
-        s += "пятницу\n"
-
-    elif code == 5:
-        s += "субботу\n"
-    s += "\n"
+    code: int = 0
+    if day == "понедельник":
+        code = 0
+    if day == "вторник":
+        code = 1
+    if day == "среда":
+        code = 2
+    if day == "четверг":
+        code = 3
+    if day == "пятница":
+        code = 4
+    if day == "суббота":
+        code = 5
 
     page = requests.get(url, headers=headers)
     encoding = page.encoding if "charset" in page.headers.get("content-type", "").lower() else None

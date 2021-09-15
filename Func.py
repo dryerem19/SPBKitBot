@@ -57,7 +57,7 @@ class Lastname:
     CHIKINEV = "C32"
     SHUBARINA = "C33"
 
-class Func(object):
+class Func:
     """Этот класс содержит в себе методы приложения"""
 
     @staticmethod
@@ -176,7 +176,7 @@ class Func(object):
         return found
 
     @staticmethod
-    def add_record_in_table(lastname: str, path: str, para: int) -> str:
+    def add_record_in_table(lastname: str, path: str, para_s: str) -> str:
         """Добавляет запись в табель.
            По умолчанию - максимальное кол-во пар - para
         
@@ -186,12 +186,22 @@ class Func(object):
         :type path: str
         """
 
+        para: int = 0
+        if para_s == "одна пара":
+            para = 1
+        if para_s == "две пары":
+            para = 2
+        if para_s == "три пары":
+            para = 3
+        if para_s == "четыре пары":
+            para = 4
+
         para *= 2
 
         gc = pygsheets.authorize(service_file=os.path.join(path, KitFile.SERVICE))
-        sheets = gc.open_by_url("https://docs.google.com/spreadsheets/d/1LxPQZ8VwG3Acu-TG8Tclr4POjnXcXlhVa2jsa3LP_Go/edit?usp=sharing")
+        sheets = gc.open_by_url("https://docs.google.com/spreadsheets/d/1iaCcEWPYznt7iYwbJtrgLcFp82b5fDCkeRbwtQdDh8M/edit#gid=1697366336")
 
-        worksheet = sheets.worksheet(property='index', value=6)
+        worksheet = sheets.worksheet(property='index', value=0)
 
         with open("admin/config.json", "r", encoding="utf8") as config:
             config = json.load(config) # load cell position
