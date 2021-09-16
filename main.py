@@ -41,8 +41,13 @@ class SPBKitHelper:
         self.path = current_path
         self.admin = admin_id
 
-        logging.basicConfig(filename="helper.log", encoding="utf-8", level=logging.DEBUG)
         self.logger = logging.getLogger("helper")
+        self.logger.setLevel(logging.DEBUG)
+
+        fh = logging.FileHandler("helper.log")
+        formatter = logging.Formatter("%(asctime)s - [%(levelname)s] -  %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s")
+        fh.setFormatter(formatter)
+        self.logger.addHandler(fh)
 
     def start(self) -> None:
         """Запустить LongPoll сессию"""
