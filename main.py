@@ -7,6 +7,7 @@
 
 import configparser
 import logging
+import sys
 import os
 
 from vk_api import VkApi
@@ -196,7 +197,8 @@ def main():
     print("[*] - Bot stopped")
 
 if __name__ == "__main__":
-    main()
-
-
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit()
 
