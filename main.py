@@ -9,6 +9,7 @@ import configparser
 import logging
 import sys
 import os
+from requests.models import ReadTimeoutError
 
 from vk_api import VkApi
 from vk_api.utils import get_random_id
@@ -52,15 +53,18 @@ class SPBKitHelper:
     def start(self) -> None:
         """Запустить LongPoll сессию"""
 
-        try:
-            vk_session = VkApi(token = self.token, api_version = self.api)
-            self.vk = vk_session.get_api()
-            self.longpoll = VkBotLongPoll(vk_session, group_id = self.id)
-            self.logger.debug("[*] - Session started successfully")
-            self.listen()
-        except Exception as e:
-            self.logger.debug("[*] - Session started error")
-            self.logger.debug("[*] - Exception: "+ repr(e))
+        while True:
+            try:
+                vk_session = VkApi(token = self.token, api_version = self.api)
+                self.vk = vk_session.get_api()
+                self.longpoll = VkBotLongPoll(vk_session, group_id = self.id)
+                self.logger.debug("[*] - Session started successfully")
+                self.listen()
+            except ReadTimeoutError:
+                self.logger.debug("[*] - Handling a ReadTimeoutError exception. Reconnected to the server...")
+            
+            except Exception as e:
+                self.logger.debug("[*] - Unknown exception: "+ repr(e))
         
     def listen(self):
         """Слушает LongPoll сервер на предмет сообщений от пользователя"""
