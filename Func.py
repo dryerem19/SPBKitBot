@@ -2,7 +2,7 @@
 """
 :authors: dryerem19
 :license: Apache License, Version 2.0, see LICENSE file
-:copyright: (c) 2019 dryerem19
+:copyright: (c) 2020 dryerem19
 """
 
 import os
@@ -100,6 +100,7 @@ class Func:
                 continue
 
         return string
+	
 
     @staticmethod
     def get_homework(day: str, path) -> str:
@@ -111,7 +112,7 @@ class Func:
         :type path: str
         """
 
-        key = "https://docs.google.com/spreadsheets/d/1axnzRILcQ06aqrzZkzWJ7etMQpkuoXiFsSzPYZk9Rps/edit?usp=sharing"
+        key = "https://docs.google.com/spreadsheets/d/1iaCcEWPYznt7iYwbJtrgLcFp82b5fDCkeRbwtQdDh8M/edit#gid=1697366336"
 
         # authorize
         gc = pygsheets.authorize(service_file=os.path.join(path, KitFile.SERVICE))
@@ -209,6 +210,7 @@ class Func:
             h = config[day()]
 
         if lastname == "avetysyan":
+            print("YES!")
             cell = Lastname.AVETYSYAN.replace(Lastname.AVETYSYAN[0], h)
             worksheet.update_value(cell, para)
 

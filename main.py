@@ -2,7 +2,7 @@
 """
 :authors: dryerem19
 :license: Apache License, Version 2.0, see LICENSE file
-:copyright: (c) 2019 dryerem19
+:copyright: (c) 2020 dryerem19
 """
 
 import configparser
@@ -18,7 +18,7 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import keyboard as key
 from Func import KitFile, Func
 
-from scripts import shedule
+from tools import *
 
 
 class SPBKitHelper:
@@ -79,7 +79,7 @@ class SPBKitHelper:
                 self.logger.debug(f"[*] - New message from id: {from_id}")
                 self.logger.debug(f"[*] - Message: {message}")
 
-                if message == "start" or message == "старт":
+                if message == "start" or message == "начать":
                     self.send_message("test message", key.main_page())
                     self.logger.debug(f"[*] - The bot sent the main keyboard to the user: {from_id}")
 
@@ -89,7 +89,7 @@ class SPBKitHelper:
 
                 if message == "понедельник" or message == "вторник" or message == "среда" \
                     or message == "четверг" or message == "пятница" or message == "суббота":
-                    self.send_message(shedule.get_shedule(message), key.shedule_page())
+                    self.send_message(get_shedule(message), key.shedule_page())
                     self.logger.debug(f"[*] - The bot sent the shedule on a {message} to the user: {from_id}")
 
                 if message == "назад":
@@ -99,6 +99,10 @@ class SPBKitHelper:
                 if message == "домашнее задание":
                     self.send_message("Ой, этот раздел находится в доработке, приходи позже", key.main_page())
                     self.logger.debug(f"[*] - The user {from_id} tried to access the homework section")
+
+                if message == 'замены в расписании':
+                    self.send_message(get_replacements(), key.main_page())
+                    self.logger.debug(f"[*] - The user {from_id} tried get replacements")
 
                 if message == "полезные материалы":
                     self.send_message("О, здесь достаточно полезная информация :)", key.materials_page())

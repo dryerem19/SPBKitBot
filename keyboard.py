@@ -19,7 +19,7 @@ def main_page():
     keyboard.add_button("Полезные материалы", VkKeyboardColor.POSITIVE, {"type": "btn_materials"})
     keyboard.add_line()
     keyboard.add_openlink_button("Посещаемость", "https://docs.google.com/spreadsheets/d/1LxPQZ8VwG3Acu-TG8Tclr4POjnXcXlhVa2jsa3LP_Go/edit?usp=sharing")
-    keyboard.add_openlink_button("Замены в расписании", "http://app.fxnode.ru:30001/replacements/view.html")
+    keyboard.add_button("Замены в расписании")
     keyboard.add_line()
     keyboard.add_button("Админ", VkKeyboardColor.PRIMARY, {"type": "btn_admin"})
 

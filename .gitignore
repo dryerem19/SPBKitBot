@@ -5,3 +5,4 @@ spbkit-bot-key.json
 .vscode
 __pycache__
 helper.log
+venv
