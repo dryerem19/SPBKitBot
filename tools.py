@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
            'Accept': 'application/json, text/javascript, */*; q=0.01'}
 
-url_replacements: str = 'http://spbcoit.ru:30001/replacements/api/fetch-rep?ts=1633371722763'
+url_replacements: str = 'http://service.spbcoit.ru:3080/replacements/api/fetch-rep?ts=1665995664182'
 url_shedule = "http://www.spbkit.edu.ru/index.php?option=com_timetable&Itemid=82#gruppi-19"
 
 
@@ -43,7 +43,7 @@ def get_shedule(day: str) -> str:
     encoding = page.encoding if "charset" in page.headers.get("content-type", "").lower() else None
     soup = BeautifulSoup(page.content, 'html.parser', from_encoding=encoding)
 
-    group = soup.find(id="gruppi-19") # get need group
+    group = soup.find(id="gruppi-28") # get need group
     days_tabs = group.find_all("ul", class_="ui-tabs-nav") # get all days tabs
 
     # get url day
@@ -66,7 +66,7 @@ def get_shedule(day: str) -> str:
     return s
 
 
-def get_replacements(group: str = '01') -> Union[str, None]:
+def get_replacements(group: str = '1') -> Union[str, None]:
     """Returns a formatted string - a list of academic subjects 
     that have been replaced by other subjects for the specified group.
     return None if replacements is not find.
